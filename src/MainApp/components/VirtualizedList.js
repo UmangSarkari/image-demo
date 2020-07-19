@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 
 // virtual list:: need to provide data items of fixed height
 const VirtualizedList = props => {
-  const { data = [], itemHeight, renderItem } = props;
-  const dataLength = data.length;
+  const { dataLength = 0, itemHeight, renderItem } = props;
   const windowHeight = window.innerHeight;
 
   const [scrollTop, setScrollTop] = useState(0);
@@ -18,7 +17,6 @@ const VirtualizedList = props => {
     };
   });
 
-  const virtualHeight = dataLength * itemHeight;
   let startIndex = Math.floor(scrollTop / itemHeight);
   let endIndex = Math.min(dataLength - 1, Math.floor((scrollTop + windowHeight) / itemHeight));
 
@@ -26,25 +24,11 @@ const VirtualizedList = props => {
   startIndex = Math.max(0, startIndex - 1);
   endIndex = Math.min(dataLength - 1, endIndex + 1);
 
-  const items = [];
-  for (let i = startIndex; i <= endIndex; i++) {
-    items.push(
-      <div
-        style={{
-          position: "absolute",
-          top: i * itemHeight,
-          width: "100%"
-        }}
-      >
-        {renderItem({
-          item: data[i],
-          index: i
-        })}
-      </div>
-    );
+  let items = [];
+  for (let index = 0; index < dataLength; index++) {
+    items.push(renderItem({ index, isVisible: index >= startIndex && index <= endIndex }));
   }
-
-  return <div style={{ position: "relative", height: virtualHeight }}>{items}</div>;
+  return <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>{[...items]}</div>;
 };
 
 export default VirtualizedList;

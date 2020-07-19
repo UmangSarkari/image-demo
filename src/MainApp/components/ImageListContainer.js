@@ -19,6 +19,13 @@ class ImageListContainer extends React.Component {
       .get(`https://picsum.photos/v2/list?page=${page}&limit=${limit}`)
       .then(res => {
         let { data = [] } = res;
+        // change resolution of images as images fetched were very heavy
+        data = data.map(doc => {
+          let imageUrl = doc.download_url;
+          // get second last index of "/" which holds resolution values and chnage resolution to 250
+          imageUrl = imageUrl.substring(0, imageUrl.lastIndexOf("/", imageUrl.lastIndexOf("/") - 1)) + "/250";
+          return { ...doc, imageUrl };
+        });
         this.setState({
           data: [...this.state.data, ...data],
           currentPage: page,
@@ -37,8 +44,8 @@ class ImageListContainer extends React.Component {
     }
   };
 
-  renderItem = ({ item }) => {
-    let { download_url, id, author } = item;
+  renderItem = ({ item, isVisible }) => {
+    let { imageUrl, id, author } = item;
     let { colStyle, imgContainerStyle, headerStyle, descStyle, imgStyle, colPerRow } = resolveDPValue(
       listContainerStyle,
       ["colStyle", "imgContainerStyle", "headerStyle", "descStyle", "imgStyle", "colPerRow"],
@@ -46,60 +53,57 @@ class ImageListContainer extends React.Component {
     );
     return (
       <div key={id} style={{ ...colStyle, width: `${100 / colPerRow}%` }}>
-        <div style={imgContainerStyle}>
-          <img src={download_url} alt="sample_image" {...imgStyle} />
-        </div>
+        <div style={imgContainerStyle}>{isVisible && <img src={imageUrl} alt="sample_image" {...imgStyle} />}</div>
         <div style={headerStyle}>{author}</div>
         <div style={descStyle}>Some Description</div>
       </div>
     );
   };
 
-  renderRow = ({ item }) => item; // already a react element as calculated in render method
-
-  render() {
-    let { data, loading, hasNext } = this.state;
-    let { activeDP } = this.props;
-    let { containerStyle, colPerRow = 1, rowStyle, loadMoreStyle } = resolveDPValue(
+  renderRow = ({ index, isVisible }) => {
+    let { colPerRow = 1, rowStyle } = resolveDPValue(
       listContainerStyle,
-      ["containerStyle", "colPerRow", "rowStyle", "loadMoreStyle"],
-      activeDP
+      ["colPerRow", "rowStyle"],
+      this.props.activeDP
     );
 
-    let items = data.map((item, index) => {
-      return this.renderItem({ item, index });
-    });
-
-    let rendersToShow = [];
-    let iterationCount = Math.ceil(data.length / colPerRow);
-    for (let i = 0; i < iterationCount; i++) {
-      let row = [];
-      for (let j = i * colPerRow; j < (i + 1) * colPerRow; j++) {
-        if (items[j]) {
-          row.push(items[j]);
-        } else {
-          row.push(<div key={j} style={rowStyle} />);
-        }
+    let { data = [] } = this.state;
+    let rowItems = [];
+    for (let i = index * colPerRow; i < (index + 1) * colPerRow; i++) {
+      if (data[i]) {
+        rowItems.push(this.renderItem({ item: data[i], isVisible }));
+      } else {
+        rowItems.push(<div key={i} style={rowStyle} />);
       }
-      rendersToShow.push(
-        <div key={`row_${i}`} style={rowStyle}>
-          {[...row]}
-        </div>
-      );
     }
-
-    let LoadMoreComponent = (
-      <div onClick={this.loadMore} style={loadMoreStyle}>
-        Load More
+    return (
+      <div key={`row_${index}`} style={rowStyle}>
+        {[...rowItems]}
       </div>
+    );
+  };
+
+  loadMoreComponent = style => (
+    <div onClick={this.loadMore} style={style}>
+      Load More
+    </div>
+  );
+
+  render() {
+    let { data = [], loading, hasNext } = this.state;
+    let { activeDP } = this.props;
+    let { containerStyle, loadMoreStyle, colPerRow } = resolveDPValue(
+      listContainerStyle,
+      ["containerStyle", "loadMoreStyle", "colPerRow"],
+      activeDP
     );
 
     // itemHeight: calculated as per styling (fixed height):: recalculate if change in style
     return (
       <div style={containerStyle}>
-        <VirtualizedList data={rendersToShow} itemHeight={341} renderItem={this.renderRow} />
+        <VirtualizedList dataLength={data.length / colPerRow} itemHeight={341} renderItem={this.renderRow} />
         {loading && <Loader />}
-        {hasNext && !loading && LoadMoreComponent}
+        {hasNext && !loading && this.loadMoreComponent(loadMoreStyle)}
       </div>
     );
   }
