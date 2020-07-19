@@ -14,7 +14,6 @@ const navContainerStyle = {
   paddingTop: 10,
   paddingBottom: 10,
   display: "flex",
-  flex: 1,
   backgroundColor: themeColor,
   justifyContent: "space-between"
 };
