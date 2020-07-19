@@ -25,8 +25,8 @@ export const listContainerStyle = {
   colPerRowSM: 1,
   rowStyle: { display: "flex", flex: 1 },
   colStyle: {
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 12,
+    marginRight: 12,
     marginTop: 20,
     marginBottom: 20,
     display: "flex",

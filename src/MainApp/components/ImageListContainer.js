@@ -45,7 +45,7 @@ class ImageListContainer extends React.Component {
   };
 
   renderItem = ({ item, isVisible }) => {
-    let { imageUrl, id, author } = item;
+    let { imageUrl, id, author } = item || {};
     let { colStyle, imgContainerStyle, headerStyle, descStyle, imgStyle, colPerRow } = resolveDPValue(
       listContainerStyle,
       ["colStyle", "imgContainerStyle", "headerStyle", "descStyle", "imgStyle", "colPerRow"],
@@ -53,9 +53,13 @@ class ImageListContainer extends React.Component {
     );
     return (
       <div key={id} style={{ ...colStyle, width: `${100 / colPerRow}%` }}>
-        <div style={imgContainerStyle}>{isVisible && <img src={imageUrl} alt="sample_image" {...imgStyle} />}</div>
-        <div style={headerStyle}>{author}</div>
-        <div style={descStyle}>Some Description</div>
+        {item && (
+          <>
+            <div style={imgContainerStyle}>{isVisible && <img src={imageUrl} alt="sample_image" {...imgStyle} />}</div>
+            <div style={headerStyle}>{author}</div>
+            <div style={descStyle}>Some Description</div>
+          </>
+        )}
       </div>
     );
   };
@@ -70,11 +74,7 @@ class ImageListContainer extends React.Component {
     let { data = [] } = this.state;
     let rowItems = [];
     for (let i = index * colPerRow; i < (index + 1) * colPerRow; i++) {
-      if (data[i]) {
-        rowItems.push(this.renderItem({ item: data[i], isVisible }));
-      } else {
-        rowItems.push(<div key={i} style={rowStyle} />);
-      }
+      rowItems.push(this.renderItem({ item: data[i], isVisible }));
     }
     return (
       <div key={`row_${index}`} style={rowStyle}>
@@ -101,7 +101,7 @@ class ImageListContainer extends React.Component {
     // itemHeight: calculated as per styling (fixed height):: recalculate if change in style
     return (
       <div style={containerStyle}>
-        <VirtualizedList dataLength={data.length / colPerRow} itemHeight={341} renderItem={this.renderRow} />
+        <VirtualizedList dataLength={Math.ceil(data.length / colPerRow)} itemHeight={341} renderItem={this.renderRow} />
         {loading && <Loader />}
         {hasNext && !loading && this.loadMoreComponent(loadMoreStyle)}
       </div>

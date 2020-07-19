@@ -11,7 +11,8 @@ const containerStyle = {
 };
 
 const navContainerStyle = {
-  paddingTop: 10,
+  marginTop: 10,
+  paddingTop: 15,
   paddingBottom: 10,
   display: "flex",
   backgroundColor: themeColor,

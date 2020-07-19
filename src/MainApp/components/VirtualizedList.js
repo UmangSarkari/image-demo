@@ -20,10 +20,9 @@ const VirtualizedList = props => {
   let startIndex = Math.floor(scrollTop / itemHeight);
   let endIndex = Math.min(dataLength - 1, Math.floor((scrollTop + windowHeight) / itemHeight));
 
-  // taking an extra margin of one item on both sides
-  startIndex = Math.max(0, startIndex - 1);
-  endIndex = Math.min(dataLength - 1, endIndex + 1);
-
+  // taking an extra margin of two items on both sides
+  startIndex = Math.max(0, startIndex - 2);
+  endIndex = Math.min(dataLength - 1, endIndex + 2);
   let items = [];
   for (let index = 0; index < dataLength; index++) {
     items.push(renderItem({ index, isVisible: index >= startIndex && index <= endIndex }));
