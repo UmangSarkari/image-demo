@@ -1,5 +1,5 @@
 import { themeColor, greyishBlack } from "./colors";
-import { regular_12, bold_12 } from "./fonts";
+import { regular_12, extra_bold_12 } from "./fonts";
 
 const containerStyle = {
   paddingTop: 10,
@@ -37,6 +37,6 @@ export const headerStyles = {
     cursor: "pointer",
     ...regular_12
   },
-  navItemBoldStyle: { ...bold_12 },
+  navItemBoldStyle: { ...extra_bold_12 },
   separatorStyleLG: { height: 20, width: 1, backgroundColor: greyishBlack }
 };

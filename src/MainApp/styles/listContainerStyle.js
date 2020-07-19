@@ -51,7 +51,8 @@ export const listContainerStyle = {
     color: greyishBlack,
     whiteSpace: "noWrap",
     textOverflow: "ellipsis",
-    overflow: "hidden"
+    overflow: "hidden",
+    textTransform: "uppercase"
   },
   descStyle: { marginTop: 4, ...regular_12, whiteSpace: "noWrap", textOverflow: "ellipsis", overflow: "hidden" },
   loadMoreStyle: {

@@ -3,8 +3,8 @@ export const regular_12 = {
   fontSize: 12
 };
 
-export const bold_12 = {
-  fontFamily: "OpenSans-Bold",
+export const extra_bold_12 = {
+  fontFamily: "OpenSans-ExtraBold",
   fontSize: 12
 };
 
