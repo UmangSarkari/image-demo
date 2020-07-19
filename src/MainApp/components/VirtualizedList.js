@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-const List = props => {
-  let { data = [], renderItem } = props;
-  if (!data.length) {
-    return null;
-  }
-  return (
-    <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
-      {data.map((item, index) => renderItem({ item, index }))}
-    </div>
-  );
-};
-
 // virtual list:: need to provide data items of fixed height
 const VirtualizedList = props => {
   const { data = [], itemHeight, renderItem } = props;

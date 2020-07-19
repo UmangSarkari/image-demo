@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import List from "./List";
+import VirtualizedList from "./VirtualizedList";
 import Loader from "./Loader";
 import ActiveDPContext from "../contexts/ActiveDPContext";
 import { withContext, resolveDPValue } from "../Utility";
@@ -97,8 +97,7 @@ class ImageListContainer extends React.Component {
     // itemHeight: calculated as per styling (fixed height):: recalculate if change in style
     return (
       <div style={containerStyle}>
-        {/* <List data={rendersToShow} renderItem={this.renderRow} /> */}
-        <List data={rendersToShow} itemHeight={341} renderItem={this.renderRow} />
+        <VirtualizedList data={rendersToShow} itemHeight={341} renderItem={this.renderRow} />
         {loading && <Loader />}
         {hasNext && !loading && LoadMoreComponent}
       </div>
