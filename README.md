@@ -1,9 +1,11 @@
 # image-demo
 
-After taking clone of the repo, follow the following steps:
+Run the following commands, after taking clone of the repo:
 
 cd image-demo
 
 npm install
 
 npm start
+
+Demo: https://image-demo-c2277.web.app/
